@@ -6,15 +6,21 @@ const props = defineProps<{
   list: GridItem[]
   cols?: number
   title?: string
+  customTitle?: string
   forExport?: boolean
 }>()
 
-const gridCols = computed(() => props.cols || 5)
+const emit = defineEmits(['select-slot', 'update:customTitle'])
 
-const emit = defineEmits(['select-slot'])
+const gridCols = computed(() => props.cols || 5)
 
 function handleSelect(index: number) {
   emit('select-slot', index)
+}
+
+function handleTitleInput(e: Event) {
+  const target = e.target as HTMLInputElement
+  emit('update:customTitle', target.value)
 }
 
 function getImageUrl(url: string) {
@@ -33,6 +39,24 @@ function getImageUrl(url: string) {
     class="w-full flex flex-col items-center relative"
     :class="{ 'bg-white py-8': forExport }"
   >
+    <!-- Custom User Title (Editable) -->
+    <div class="relative group mb-2">
+      <input
+        :value="customTitle"
+        class="text-3xl font-bold text-center bg-transparent border-b-2 border-transparent hover:border-black focus:border-[#e4007f] focus:outline-none transition-colors px-2 py-1 text-black w-full"
+        :class="{ 'pointer-events-none border-none': forExport }"
+        style="font-family: 'Noto Serif SC', serif;"
+        placeholder="我的动画喜好表"
+        type="text"
+        @input="handleTitleInput"
+      >
+      <div 
+        v-if="!forExport"
+        i-carbon-edit 
+        class="absolute -right-6 top-1/2 -translate-y-1/2 text-black opacity-0 group-hover:opacity-100 transition-opacity" 
+      />
+    </div>
+
     <!-- Template Title -->
     <h2 
       v-if="title"
@@ -94,7 +118,7 @@ function getImageUrl(url: string) {
       class="absolute bottom-2 right-4 flex items-center gap-1 pointer-events-none"
     >
       <span 
-        class="text-black text-sm font-bold" 
+        class="text-black text-sm font-bold tracking-widest" 
         style="font-family: 'Noto Serif SC', 'FZQingKeBenYueSong', 'FangSong', serif;"
       >
         【我推<span style="color: #e4007f;">的</span>格子】

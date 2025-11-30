@@ -70,8 +70,8 @@ async function handleSave() {
 
 <template>
   <div class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans pb-20">
-    <!-- Header no longer needs search event, as search is triggered by grid slots -->
-    <Header v-model:name="name" @search="() => {}" />
+    <!-- Header no longer needs search event or name prop -->
+    <Header />
     
     <div class="container mx-auto flex flex-col items-center gap-6 px-4 max-w-full overflow-x-hidden">
       <!-- Live Interactive Grid (Responsive, Direct URLs) -->
@@ -80,6 +80,7 @@ async function handleSave() {
         :list="list" 
         :cols="currentTemplate.cols"
         :title="currentTemplate.name"
+        v-model:customTitle="name"
         @select-slot="handleSelectSlot"
       />
 
@@ -94,6 +95,7 @@ async function handleSave() {
           :list="list" 
           :cols="currentTemplate.cols"
           :title="currentTemplate.name"
+          :custom-title="name"
           :for-export="true"
         />
       </div>
@@ -117,7 +119,8 @@ async function handleSave() {
             <select
               id="template-select"
               v-model="currentTemplateId"
-              class="appearance-none bg-white border-2 border-black text-black py-1 pl-3 pr-8 rounded-md text-sm font-bold focus:outline-none focus:border-[#e4007f] cursor-pointer"
+              class="appearance-none bg-white border-2 border-black text-black py-1 pl-3 pr-8 rounded-md text-sm font-bold focus:outline-none focus:border-[#e4007f] cursor-pointer text-center"
+              style="text-align-last: center;"
             >
               <option v-for="template in TEMPLATES" :key="template.id" :value="template.id">
                 {{ template.name }}
