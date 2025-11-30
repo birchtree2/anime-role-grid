@@ -14,7 +14,6 @@ export async function exportGridAsImage(elementId: string, fileName: string) {
     }
 
     // 2. Pre-process images: Convert all images to Base64 manually
-    // This bypasses html-to-image's internal fetching, which is often flaky with CORS
     const images = Array.from(element.getElementsByTagName('img'))
     const originalSrcs = new Map<HTMLImageElement, string>()
 
@@ -26,32 +25,34 @@ export async function exportGridAsImage(elementId: string, fileName: string) {
             originalSrcs.set(img, src)
 
             // Use proxy to fetch image data
-            // Note: The src in the hidden grid is already proxied by Grid.vue, 
-            // but we fetch it here to get the blob.
-            const response = await fetch(src, { cache: 'force-cache' })
-            const blob = await response.blob()
+            // Note: The src in the hidden grid is already proxied by Grid.vue
+            let fetchUrl = src
 
-            await new Promise<void>((resolve) => {
-                const reader = new FileReader()
-                reader.onloadend = () => {
-                    if (reader.result) {
-                        img.src = reader.result as string
-                        img.removeAttribute('crossorigin') // Base64 doesn't need crossorigin
+            // Try to fetch with robust settings
+            try {
+                await fetchAndConvertToBase64(fetchUrl, img)
+            } catch (e) {
+                // Fallback: If proxy fails, try original URL if we can extract it
+                console.warn('Proxy fetch failed, trying fallback:', e)
+                if (src.includes('wsrv.nl')) {
+                    try {
+                        const urlParam = new URL(src).searchParams.get('url')
+                        if (urlParam) {
+                            await fetchAndConvertToBase64(urlParam, img)
+                        }
+                    } catch (fallbackError) {
+                        console.warn('Fallback fetch also failed:', fallbackError)
                     }
-                    resolve()
                 }
-                reader.readAsDataURL(blob)
-            })
+            }
         } catch (e) {
             console.warn('Image pre-processing failed:', e)
-            // If failed, we leave the original src and hope html-to-image can handle it
-            // or it will just show as broken (better than crashing)
         }
     }))
 
     // Wait for DOM to update with new Base64 srcs
     await nextTick()
-    await new Promise(resolve => setTimeout(resolve, 500)) // Extra safety buffer
+    await new Promise(resolve => setTimeout(resolve, 500))
 
     try {
         // 3. Generate PNG
@@ -59,7 +60,8 @@ export async function exportGridAsImage(elementId: string, fileName: string) {
             backgroundColor: '#ffffff',
             pixelRatio: 3,
             cacheBust: true,
-            skipOnError: true, // Prevent crash on remaining errors
+            skipOnError: true,
+            fontEmbedCSS: '', // Skip font embedding to prevent CORS issues with fonts
         } as any)
 
         // 4. Download
@@ -69,10 +71,37 @@ export async function exportGridAsImage(elementId: string, fileName: string) {
         link.click()
 
     } finally {
-        // 5. Restore original srcs (optional, since this is a hidden grid, but good practice)
+        // 5. Restore original srcs
         originalSrcs.forEach((src, img) => {
             img.src = src
             img.setAttribute('crossorigin', 'anonymous')
         })
     }
+}
+
+async function fetchAndConvertToBase64(url: string, img: HTMLImageElement) {
+    const response = await fetch(url, {
+        cache: 'force-cache',
+        mode: 'cors',
+        credentials: 'omit',
+        referrerPolicy: 'no-referrer'
+    })
+    if (!response.ok) throw new Error(`Fetch failed: ${response.status}`)
+
+    const blob = await response.blob()
+
+    await new Promise<void>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = () => {
+            if (reader.result) {
+                img.src = reader.result as string
+                img.removeAttribute('crossorigin')
+                resolve()
+            } else {
+                reject(new Error('Blob conversion failed'))
+            }
+        }
+        reader.onerror = reject
+        reader.readAsDataURL(blob)
+    })
 }
