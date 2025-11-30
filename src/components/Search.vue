@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, shallowRef, onMounted, watch } from 'vue'
-import { useMagicKeys } from '@vueuse/core'
+import { useMagicKeys, watchDebounced } from '@vueuse/core'
 import { useBgmSearch } from '~/logic/search'
 import type { BgmCharacterSearchResultItem } from '~/types'
 
@@ -14,10 +14,9 @@ const errorMessage = ref('')
 const offset = ref(0)
 const hasMore = ref(true)
 
-const activeTab = ref<'search' | 'custom'>('search') // New: Active tab state
+const activeTab = ref<'search' | 'custom'>('search')
 
-// New: Custom upload form states
-const customName = ref('')
+// Custom upload form states
 const customImageFile = ref<File | null>(null)
 const customImagePreview = ref<string | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
@@ -28,6 +27,17 @@ if (escape) {
     if (v) emit('close')
   })
 }
+
+// Auto-search when keyword changes (debounced)
+watchDebounced(
+  keyword,
+  () => {
+    if (keyword.value) {
+      handleSearch()
+    }
+  },
+  { debounce: 800, maxWait: 2000 },
+)
 
 async function handleSearch() {
   if (!keyword.value) return
@@ -72,12 +82,11 @@ function handleAdd(item: BgmCharacterSearchResultItem) {
   emit('add', {
     id: item.id,
     name: item.name,
-    image: item.images.large, // 关键：将角色的大图URL传递给父组件
+    image: item.images.large,
   })
   emit('close')
 }
 
-// New: Custom upload functions
 function triggerFileInput() {
   fileInput.value?.click()
 }
@@ -108,10 +117,10 @@ function handleDrop(event: DragEvent) {
 }
 
 function handleCustomAdd() {
-  if (customName.value && customImagePreview.value) {
+  if (customImagePreview.value) {
     emit('add', {
-      id: `custom-${Date.now()}`, // Generate a unique ID for custom items
-      name: customName.value,
+      id: `custom-${Date.now()}`,
+      name: 'Custom Image', // Default name since input was removed
       image: customImagePreview.value,
     })
     emit('close')
@@ -142,6 +151,9 @@ onMounted(() => {
         <div v-else i-carbon-search />
       </div>
     </div>
+    <p class="text-xs text-gray-400 px-1">
+      提示：如果搜不到，请尝试输入<b>完整全名</b> (Bangumi 搜索较严格)。例如：`四宫`搜不到，就输入`四宫辉夜`。 
+    </p>
     
     <div class="flex-1 overflow-y-auto min-h-0">
       <!-- Tabs -->
@@ -210,15 +222,7 @@ onMounted(() => {
 
       <!-- Custom Upload Tab Content -->
       <div v-else class="p-4 flex flex-col gap-4">
-        <div class="flex flex-col gap-2">
-          <label class="text-sm font-medium text-gray-700 dark:text-gray-300">角色名称</label>
-          <input 
-            v-model="customName"
-            type="text" 
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700"
-            placeholder="输入角色名字"
-          >
-        </div>
+        <!-- Removed Name Input as requested -->
         
         <div class="flex flex-col gap-2">
           <label class="text-sm font-medium text-gray-700 dark:text-gray-300">上传图片</label>
@@ -245,7 +249,7 @@ onMounted(() => {
 
         <button 
           class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-4"
-          :disabled="!customName || !customImagePreview"
+          :disabled="!customImagePreview"
           @click="handleCustomAdd"
         >
           确认添加
