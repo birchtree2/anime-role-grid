@@ -111,8 +111,11 @@ async function handleSave() {
         margin: '0',
         // Ensure grid layout uses fixed px columns instead of minmax(0, 1fr)
         gridTemplateColumns: `repeat(${currentCols}, 120px)`,
-      }
-    })
+      },
+      // Robustness settings
+      skipOnError: true, // Ignore failed resources (like fonts or broken images)
+      fontEmbedCSS: '', // Skip font embedding if it causes issues
+    } as any)
     
     const link = document.createElement('a')
     link.download = `anime-grid-${Date.now()}.png`
@@ -120,7 +123,14 @@ async function handleSave() {
     link.click()
   } catch (error: any) {
     console.error('Export failed:', error)
-    alert(`图片生成失败: ${error.message || error}`)
+    
+    // Try to extract meaningful message from Event objects
+    let msg = error.message || error
+    if (Object.prototype.toString.call(error) === '[object Event]' && error.type === 'error') {
+      msg = '资源加载失败 (可能是网络问题或图片跨域)'
+    }
+    
+    alert(`图片生成失败: ${msg}`)
   } finally {
     // Restore original images
     images.forEach((img, i) => {
