@@ -11,6 +11,7 @@ import { TEMPLATES } from '~/logic/templates'
 import type { GridItemCharacter } from '~/types'
 
 const showSearch = ref(false)
+const showShareModal = ref(false)
 const currentSlotIndex = ref<number | null>(null)
 
 // Dropdown Logic
@@ -61,14 +62,13 @@ const saving = ref(false)
 
 import { exportGridAsImage } from '~/logic/export'
 
-// ...
-
 async function handleSave() {
   if (saving.value) return
   saving.value = true
   
   try {
     await exportGridAsImage('grid-export-target', 'anime-grid')
+    showShareModal.value = true
   } catch (error: any) {
     console.error('Export failed:', error)
     let msg = error.message || error
@@ -84,7 +84,6 @@ async function handleSave() {
 
 <template>
   <div class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans pb-20">
-    <!-- Header no longer needs search event or name prop -->
     <Header />
     
     <div class="container mx-auto flex flex-col items-center gap-6 px-4 max-w-full">
@@ -116,7 +115,7 @@ async function handleSave() {
 
       <div class="flex flex-col items-center gap-4">
         <button 
-          class="px-8 py-3 bg-gray-900 text-white rounded-full text-lg font-medium hover:bg-gray-800 transition-colors flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+          class="px-10 py-3 bg-[#e4007f] text-white rounded-full text-lg font-bold hover:bg-[#c0006b] transition-all flex items-center gap-3 shadow-lg hover:shadow-xl hover:shadow-pink-500/30 transform hover:-translate-y-1"
           :disabled="saving"
           @click="handleSave"
         >
@@ -124,6 +123,7 @@ async function handleSave() {
           <div v-else i-carbon-image class="text-xl" />
           <span>{{ saving ? '生成中...' : '保存高清图片' }}</span>
         </button>
+
 
         <!-- Template Switcher (Dropdown) -->
         <div class="flex items-center gap-2">
@@ -204,6 +204,40 @@ async function handleSave() {
         @add="handleAdd"
         @close="showSearch = false"
       />
+    </Transition>
+
+    <!-- Success/Share Modal -->
+    <Transition
+      enter-active-class="transition duration-300 ease-out"
+      enter-from-class="opacity-0 scale-95"
+      enter-to-class="opacity-100 scale-100"
+      leave-active-class="transition duration-200 ease-in"
+      leave-from-class="opacity-100 scale-100"
+      leave-to-class="opacity-0 scale-95"
+    >
+      <div 
+        v-if="showShareModal" 
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4" 
+        @click="showShareModal = false"
+      >
+        <div 
+          class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-sm w-full transform transition-all border-2 border-[#e4007f]" 
+          @click.stop
+        >
+          <img src="/cana.webp" class="w-25 h-25 object-contain mx-auto mb-4 animate-bounce" alt="Success" />
+          <h3 class="text-2xl font-bold mb-2 text-gray-900" style="font-family: 'Noto Serif SC', serif;">保存成功！</h3>
+          <p class="text-gray-600 mb-8 font-medium">图片已保存到相册，快去分享给朋友们吧！</p>
+          
+          <div class="flex flex-col gap-3">
+            <button 
+              @click="showShareModal = false" 
+              class="w-full px-6 py-3 bg-[#e4007f] text-white rounded-xl font-bold hover:bg-[#c0006b] transition-colors shadow-lg hover:shadow-pink-500/30"
+            >
+              好的，我去分享
+            </button>
+          </div>
+        </div>
+      </div>
     </Transition>
   </div>
 </template>

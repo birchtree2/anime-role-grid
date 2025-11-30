@@ -12,7 +12,7 @@
       <a 
         href="https://github.com/ywh555hhh/anime-role-grid" 
         target="_blank" 
-        class="flex items-center gap-2 hover:text-black transition-colors group"
+        class="flex items-center gap-2 hover:text-[#e4007f] transition-colors group"
       >
         <div i-carbon-logo-github class="text-xl group-hover:scale-110 transition-transform" />
         <span class="font-bold tracking-widest">GitHub</span>
@@ -20,7 +20,7 @@
       <a 
         href="https://discord.gg/8xF22PN4jW" 
         target="_blank" 
-        class="flex items-center gap-2 hover:text-[#5865F2] transition-colors group"
+        class="flex items-center gap-2 hover:text-[#e4007f] transition-colors group"
       >
         <div i-carbon-logo-discord class="text-xl group-hover:scale-110 transition-transform" />
         <span class="font-bold tracking-widest">Discord</span>
