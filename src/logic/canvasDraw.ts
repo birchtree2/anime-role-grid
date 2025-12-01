@@ -37,24 +37,45 @@ export class CanvasGenerator {
 
     private getImageUrl(url: string): string {
         if (!url) return ''
-        // Use wsrv.nl proxy for CORS support, similar to Grid.vue
-        return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=png`
+        // Use wsrv.nl proxy for CORS support
+        // Add cache bust to prevent caching of corrupted images
+        // Add n=-1 to disable optimization which might cause issues for some images
+        return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=png&n=-1&t=${Date.now()}`
     }
 
     private loadImage(url: string): Promise<HTMLImageElement> {
         return new Promise((resolve) => {
             const img = new Image()
             img.crossOrigin = 'anonymous'
-            img.onload = () => resolve(img)
+
+            img.onload = async () => {
+                try {
+                    // Force decode to ensure image is fully ready
+                    await img.decode()
+                    if (img.naturalWidth === 0 || img.naturalHeight === 0) {
+                        throw new Error('Image loaded but has 0 dimensions')
+                    }
+                    resolve(img)
+                } catch (e) {
+                    console.warn(`Image decode failed: ${url}`, e)
+                    // Fallback to placeholder
+                    this.resolvePlaceholder(resolve)
+                }
+            }
+
             img.onerror = () => {
                 console.warn(`Failed to load image: ${url}`)
-                // Return a 1x1 transparent image or placeholder to avoid crashing
-                const placeholder = new Image()
-                placeholder.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
-                resolve(placeholder)
+                this.resolvePlaceholder(resolve)
             }
+
             img.src = url
         })
+    }
+
+    private resolvePlaceholder(resolve: (value: HTMLImageElement) => void) {
+        const placeholder = new Image()
+        placeholder.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+        resolve(placeholder)
     }
 
     async generate(options: DrawOptions): Promise<string> {
