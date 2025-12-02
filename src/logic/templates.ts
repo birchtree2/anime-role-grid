@@ -70,5 +70,59 @@ export const TEMPLATES: Template[] = [
             '想谈恋爱', '想做兄弟', '想做闺蜜', '想被包养',
             '精神状态', 'XP系统', '电子榨菜', '唯一的王',
         ]
+    },
+    {
+        id: 'moe',
+        name: '萌属性 (5x3)',
+        cols: 5,
+        items: [
+            // Row 1: Energy & Attitude
+            '傲娇', '病娇', '元气', '三无', '慵懒',
+            // Row 2: Personality Quirk
+            '中二病', '毒舌', '天然呆', '腹黑', '电波',
+            // Row 3: Social & Special
+            '高冷', '弱气', '冒失', '地雷系', '变态'
+        ]
+    },
+    {
+        id: 'hair_color',
+        name: '发色图鉴 (4x3)',
+        cols: 4,
+        items: [
+            // Row 1: Spectrum Hot
+            '红毛', '黄毛', '绿毛', '蓝毛',
+            // Row 2: Spectrum Cold & Special
+            '紫毛', '粉毛', '金毛', '棕毛',
+            // Row 3: Achromatic & Multi
+            '黑毛', '白毛', '挑染', '渐变'
+        ]
+    },
+    {
+        id: 'family',
+        name: '关系 (4x4)',
+        cols: 4,
+        items: [
+            // Row 1: Parents
+            '最佳老妈', '最屑老妈', '最佳老爸', '最屑老爸',
+            // Row 2: Siblings - Older
+            '最佳哥哥', '最屑哥哥', '最佳姐姐', '最屑姐姐',
+            // Row 3: Siblings - Younger
+            '最佳弟弟', '最屑弟弟', '最佳妹妹', '最屑妹妹',
+            // Row 4: Romance
+            '最佳恋人', '最屑恋人', '最佳前任', '最屑前任'
+        ]
+    },
+    {
+        id: 'tropes',
+        name: '喜闻乐见 (5x3)',
+        cols: 5,
+        items: [
+            // Row 1: The Classics
+            '败犬', '青梅竹马', '天降系', '欢喜冤家', '命中注定',
+            // Row 2: The Story
+            '久别重逢', '萍水相逢', '一见钟情', '契约关系', '师徒',
+            // Row 3: The Spicy/Complicated
+            '一夜情', '倒贴', '替身', '禁断', '相爱相杀'
+        ]
     }
 ]
