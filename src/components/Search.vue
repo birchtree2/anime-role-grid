@@ -229,7 +229,7 @@ onMounted(() => {
           ref="input"
           v-model="keyword"
           class="w-full px-4 py-3 rounded-lg border-2 border-black bg-white text-lg text-black outline-none focus:border-[#e4007f]"
-          placeholder="搜索角色..."
+          placeholder="搜索角色/人物..."
           type="text"
           @keydown.enter="handleSearch"
         >
@@ -244,6 +244,7 @@ onMounted(() => {
     </div>
     <p class="text-xs text-black px-1 ml-11 font-medium">
       提示：如果搜不到，请尝试输入<b>完整全名</b> (Bangumi 搜索较严格)。例如：`四宫`搜不到，就输入`四宫辉夜`。 
+      角色指作品中虚拟角色, 人物指声优等现实人物。
     </p>
     
     <div class="flex-1 overflow-y-auto min-h-0">
@@ -254,7 +255,7 @@ onMounted(() => {
           :class="activeTab === 'search' ? 'text-[#e4007f]' : 'text-black hover:text-[#e4007f]'"
           @click="activeTab = 'search'"
         >
-          搜索角色
+          搜索角色/人物
           <div v-if="activeTab === 'search'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-[#e4007f]" />
         </button>
         <button 
