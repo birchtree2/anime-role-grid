@@ -27,8 +27,8 @@ function getImageUrl(url: string) {
   if (!url) return ''
   if (props.forExport) {
     // Use proxy for export to ensure CORS headers are correct
-    // wsrv.nl is reliable and fast
-    return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=png`
+    // Proxy via Cloudflare Pages Function to avoid Referer/CORS blocks
+    return `${location.origin}/img?url=${encodeURIComponent(url)}&output=png`
   }
   return url
 }

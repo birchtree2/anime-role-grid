@@ -43,10 +43,9 @@ export class CanvasGenerator {
             return url
         }
 
-        // Use wsrv.nl proxy for CORS support
-        // Add cache bust to prevent caching of corrupted images
-        // Add n=-1 to disable optimization which might cause issues for some images
-        return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=png&n=-1&t=${Date.now()}`
+    // Use Cloudflare Pages Function proxy to avoid wsrv.nl Referer/CORS blocks
+    // Keep cache bust and n=-1 params
+    return `${location.origin}/img?url=${encodeURIComponent(url)}&output=png&n=-1&t=${Date.now()}`
     }
 
     private loadImage(url: string): Promise<HTMLImageElement> {
