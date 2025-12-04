@@ -101,7 +101,7 @@ const generatedImage = ref('')
 const canShare = ref(false)
 
 // Check share support
-if (typeof navigator !== 'undefined' && navigator.share) {
+if (typeof navigator !== 'undefined' && 'share' in navigator) {
   canShare.value = true
 }
 
@@ -117,7 +117,7 @@ async function handleShare() {
       const blob = await (await fetch(generatedImage.value)).blob()
       const file = new File([blob], 'anime-grid.png', { type: 'image/png' })
       
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      if ('canShare' in navigator && navigator.canShare({ files: [file] })) {
         await navigator.share({
           files: [file],
           title: '我的二次元成分表',
