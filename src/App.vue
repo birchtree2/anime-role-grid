@@ -72,7 +72,9 @@ function handleAdd(character: GridItemCharacter) {
 }
 
 const saving = ref(false)
+
 const imageLoadError = ref(false)
+const generatedImage = ref('')
 
 async function handleSave() {
   if (saving.value) return
@@ -82,7 +84,7 @@ async function handleSave() {
     // Give UI a moment to show loading state
     await new Promise(resolve => setTimeout(resolve, 100))
 
-    await exportGridAsImage(list.value, currentTemplateId.value, name.value, 'anime-grid')
+    generatedImage.value = await exportGridAsImage(list.value, currentTemplateId.value, name.value, 'anime-grid')
     showShareModal.value = true
   } catch (error: any) {
     console.error('Export failed:', error)
@@ -234,19 +236,30 @@ async function handleSave() {
           class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-sm w-full transform transition-all border-2 border-[#e4007f]" 
           @click.stop
         >
-          <div class="w-32 h-32 mx-auto mb-4 flex items-center justify-center animate-bounce-low">
+          <div class="w-full mb-4 flex items-center justify-center">
             <img 
-              v-if="!imageLoadError"
-              src="/cana.png" 
-              class="w-full h-full object-contain" 
-              alt="Success"
-              style="will-change: transform;"
-              @error="imageLoadError = true"
+              v-if="generatedImage"
+              :src="generatedImage" 
+              class="w-full h-auto max-h-[50vh] object-contain rounded-lg shadow-sm border border-gray-100" 
+              alt="Generated Grid"
             />
-            <div v-else class="text-6xl">🎉</div>
+            <div v-else class="w-32 h-32 mx-auto animate-bounce-low">
+              <img 
+                v-if="!imageLoadError"
+                src="/cana.png" 
+                class="w-full h-full object-contain" 
+                alt="Success"
+                style="will-change: transform;"
+                @error="imageLoadError = true"
+              />
+              <div v-else class="text-6xl">🎉</div>
+            </div>
           </div>
-          <h3 class="text-2xl font-bold mb-2 text-gray-900" style="font-family: 'Noto Serif SC', serif;">保存成功！</h3>
-          <p class="text-gray-600 mb-8 font-medium">图片已保存到相册，快去分享给朋友们吧！</p>
+          <h3 class="text-2xl font-bold mb-2 text-gray-900" style="font-family: 'Noto Serif SC', serif;">图片生成成功！</h3>
+          <p class="text-gray-600 mb-8 font-medium">
+            已尝试保存到相册。<br/>
+            <span class="text-sm text-gray-500">如果未自动保存，请长按上方图片手动保存哦~</span>
+          </p>
           
           <div class="flex flex-col gap-3">
             <button 
