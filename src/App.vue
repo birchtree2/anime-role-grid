@@ -83,8 +83,10 @@ function handleClear() {
   // Clear the character
   const item = newList[index]
   if (item.character) {
-    const { character, ...rest } = item
-    newList[index] = rest
+    newList[index] = {
+      ...item,
+      character: undefined
+    }
   }
   
   list.value = newList
@@ -96,6 +98,41 @@ const saving = ref(false)
 
 const imageLoadError = ref(false)
 const generatedImage = ref('')
+const canShare = ref(false)
+
+// Check share support
+if (typeof navigator !== 'undefined' && navigator.share) {
+  canShare.value = true
+}
+
+async function handleShare() {
+  if (!generatedImage.value) {
+    showShareModal.value = false
+    return
+  }
+
+  // If native share is supported, try it
+  if (canShare.value) {
+    try {
+      const blob = await (await fetch(generatedImage.value)).blob()
+      const file = new File([blob], 'anime-grid.png', { type: 'image/png' })
+      
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: '我的二次元成分表',
+          text: '快来看看我的二次元成分表吧！'
+        })
+        return
+      }
+    } catch (e) {
+      console.error('Share failed:', e)
+      // Fallback to just closing modal if share fails/cancelled
+    }
+  }
+  
+  showShareModal.value = false
+}
 
 async function handleSave() {
   if (saving.value) return
@@ -285,10 +322,11 @@ async function handleSave() {
           
           <div class="flex flex-col gap-3">
             <button 
-              @click="showShareModal = false" 
-              class="w-full px-6 py-3 bg-[#e4007f] text-white rounded-xl font-bold hover:bg-[#c0006b] transition-colors shadow-lg hover:shadow-pink-500/30"
+              @click="handleShare" 
+              class="w-full px-6 py-3 bg-[#e4007f] text-white rounded-xl font-bold hover:bg-[#c0006b] transition-colors shadow-lg hover:shadow-pink-500/30 flex items-center justify-center gap-2"
             >
-              好的，我去分享
+              <div v-if="canShare" i-carbon-share />
+              <span>{{ canShare ? '调用系统分享' : '好的，我去分享' }}</span>
             </button>
           </div>
         </div>

@@ -6,6 +6,7 @@ import type { BgmCharacterSearchResultItem } from '~/types'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 
+
 const emit = defineEmits(['add', 'close', 'clear'])
 
 const input = ref<HTMLInputElement>()
