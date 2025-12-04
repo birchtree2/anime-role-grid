@@ -3,7 +3,7 @@ import { ref, shallowRef, onMounted, onBeforeUnmount, watch, nextTick } from 'vu
 import { useMagicKeys, watchDebounced } from '@vueuse/core'
 import { useBgmSearch } from '~/logic/search'
 import type { BgmSearchTarget } from '~/logic/search'
-import type { BgmCharacterSearchResultItem } from '~/types'
+import type { BgmCharacterSearchResultItem, BgmPersonSearchResultItem } from '~/types'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 
@@ -12,7 +12,8 @@ const emit = defineEmits(['add', 'close', 'clear'])
 
 const input = ref<HTMLInputElement>()
 const keyword = ref('')
-const searchResult = shallowRef<BgmCharacterSearchResultItem[]>([])
+// 支持角色与人物两类搜索结果
+const searchResult = shallowRef<(BgmCharacterSearchResultItem | BgmPersonSearchResultItem)[]>([])
 const loading = ref(false)
 const errorMessage = ref('')
 const offset = ref(0)
@@ -239,14 +240,6 @@ onMounted(() => {
           <div v-if="loading" i-carbon-circle-dash class="animate-spin text-[#e4007f]" />
           <div v-else i-carbon-search class="text-black" />
         </div>
-        <!-- 搜索范围选择器（尽量少改动 UI） -->
-        <div class="absolute -bottom-8 left-0 flex items-center gap-2 text-xs">
-          <label class="text-black font-medium">范围：</label>
-          <select v-model="searchTarget" class="border border-black rounded px-2 py-1 text-black bg-white">
-            <option value="characters">角色</option>
-            <option value="persons">人物</option>
-          </select>
-        </div>
       </div>
     </div>
     <p class="text-xs text-black px-1 ml-11 font-medium">
@@ -255,7 +248,7 @@ onMounted(() => {
     
     <div class="flex-1 overflow-y-auto min-h-0">
       <!-- Tabs -->
-      <div class="flex border-b-2 border-gray-200 mb-4 items-center">
+      <div class="flex border-b-2 border-gray-200 mb-4 items-center gap-3">
         <button 
           class="flex-1 py-2 text-sm font-bold transition-colors relative"
           :class="activeTab === 'search' ? 'text-[#e4007f]' : 'text-black hover:text-[#e4007f]'"
@@ -272,6 +265,14 @@ onMounted(() => {
           自定义上传
           <div v-if="activeTab === 'custom'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-[#e4007f]" />
         </button>
+        <!-- 搜索范围选择器：放到标签栏右侧，避免与上方提示文本重叠 -->
+        <div class="flex items-center gap-2 text-xs ml-auto">
+          <label class="text-black font-medium">范围：</label>
+          <select v-model="searchTarget" class="border border-black rounded px-2 py-1 text-black bg-white">
+            <option value="characters">角色</option>
+            <option value="persons">人物</option>
+          </select>
+        </div>
         
         <!-- Clear Button -->
         <button 
