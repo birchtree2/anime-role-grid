@@ -38,4 +38,4 @@ export const list = computed({
 })
 
 // Default grid title
-export const name = useStorage('anime-grid-name', '我的动漫人物/声优喜好有问题')
+export const name = useStorage('anime-grid-name', '我的声优喜好有问题')

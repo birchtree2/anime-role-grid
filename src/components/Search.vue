@@ -19,8 +19,8 @@ const errorMessage = ref('')
 const offset = ref(0)
 const hasMore = ref(true)
 
-// 搜索范围：角色 或 人物
-const searchTarget = ref<BgmSearchTarget>('characters')
+// 搜索范围：角色 或 人物（默认设为 人物）
+const searchTarget = ref<BgmSearchTarget>('persons')
 
 const activeTab = ref<'search' | 'custom'>('search')
 

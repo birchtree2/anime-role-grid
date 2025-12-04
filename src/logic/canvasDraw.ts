@@ -185,7 +185,7 @@ export class CanvasGenerator {
         this.ctx.font = `bold ${60}px ${FONT_FAMILY}`
         this.ctx.textAlign = 'center'
         this.ctx.textBaseline = 'middle'
-        this.ctx.fillText(customTitle || '我的动漫人物/声优喜好有问题', centerX, height / 2 - 20)
+        this.ctx.fillText(customTitle || '我的声优喜好有问题', centerX, height / 2 - 20)
 
         // Template Name
         this.ctx.fillStyle = COLORS.accent
