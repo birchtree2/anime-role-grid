@@ -1,4 +1,4 @@
-import type { BgmCharacterSearchResultItem } from '~/types'
+import type { BgmCharacterSearchResultItem, BgmPersonSearchResultItem } from '~/types'
 
 // 从环境变量中获取敏感信息
 const accessToken = import.meta.env.VITE_BANGUMI_ACCESS_TOKEN
@@ -12,7 +12,9 @@ export class SearchError extends Error {
 }
 
 // 搜索函数
-export async function useBgmSearch(keyword: string, offset = 0) {
+export type BgmSearchTarget = 'characters' | 'persons'
+
+export async function useBgmSearch(keyword: string, offset = 0, target: BgmSearchTarget = 'characters') {
     if (!keyword)
         return []
 
@@ -26,7 +28,7 @@ export async function useBgmSearch(keyword: string, offset = 0) {
         // Use direct API in dev (unless using wrangler)
         const apiUrl = import.meta.env.PROD
             ? '/api/search'
-            : 'https://api.bgm.tv/v0/search/characters'
+            : `https://api.bgm.tv/v0/search/${target}`
 
         const res = await fetch(apiUrl, {
             method: 'POST',
@@ -38,11 +40,13 @@ export async function useBgmSearch(keyword: string, offset = 0) {
             },
             body: JSON.stringify({
                 keyword,
-                filter: {
-                    type: [1], // Character
-                },
+                // characters: optional nsfw flag; persons: optional career filter.
+                // Keep minimal; callers can expand in future.
+                filter: target === 'characters' ? {} : {},
                 offset,
                 limit: 20,
+                // Helper field for proxy to decide endpoint in PROD
+                target,
             }),
         })
 
@@ -54,8 +58,9 @@ export async function useBgmSearch(keyword: string, offset = 0) {
         }
 
         // API v0/search/characters 返回的是一个包含 data 字段的对象
-        const result = await res.json()
-        return (result.data || []) as BgmCharacterSearchResultItem[]
+    const result = await res.json()
+    const data = (result.data || [])
+    return data as (BgmCharacterSearchResultItem[] | BgmPersonSearchResultItem[])
     } catch (error: any) {
         if (error instanceof SearchError) {
             throw error

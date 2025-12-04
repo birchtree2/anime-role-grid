@@ -2,6 +2,7 @@
 import { ref, shallowRef, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { useMagicKeys, watchDebounced } from '@vueuse/core'
 import { useBgmSearch } from '~/logic/search'
+import type { BgmSearchTarget } from '~/logic/search'
 import type { BgmCharacterSearchResultItem } from '~/types'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
@@ -16,6 +17,9 @@ const loading = ref(false)
 const errorMessage = ref('')
 const offset = ref(0)
 const hasMore = ref(true)
+
+// 搜索范围：角色 或 人物
+const searchTarget = ref<BgmSearchTarget>('characters')
 
 const activeTab = ref<'search' | 'custom'>('search')
 
@@ -58,7 +62,7 @@ async function handleSearch() {
   hasMore.value = true
   
   try {
-    const results = await useBgmSearch(keyword.value, 0)
+    const results = await useBgmSearch(keyword.value, 0, searchTarget.value)
     searchResult.value = results
     if (results.length < 20) hasMore.value = false
   } catch (e: any) {
@@ -74,7 +78,7 @@ async function loadMore() {
   offset.value += 20
   
   try {
-    const results = await useBgmSearch(keyword.value, offset.value)
+    const results = await useBgmSearch(keyword.value, offset.value, searchTarget.value)
     if (results.length > 0) {
       searchResult.value = [...searchResult.value, ...results]
       if (results.length < 20) hasMore.value = false
@@ -88,11 +92,11 @@ async function loadMore() {
   }
 }
 
-function handleAdd(item: BgmCharacterSearchResultItem) {
+function handleAdd(item: any) {
   emit('add', {
     id: item.id,
     name: item.name,
-    image: item.images.large,
+    image: item.images?.large || item.images?.medium || item.images?.grid || item.images?.small,
   })
   emit('close')
 }
@@ -234,6 +238,14 @@ onMounted(() => {
         >
           <div v-if="loading" i-carbon-circle-dash class="animate-spin text-[#e4007f]" />
           <div v-else i-carbon-search class="text-black" />
+        </div>
+        <!-- 搜索范围选择器（尽量少改动 UI） -->
+        <div class="absolute -bottom-8 left-0 flex items-center gap-2 text-xs">
+          <label class="text-black font-medium">范围：</label>
+          <select v-model="searchTarget" class="border border-black rounded px-2 py-1 text-black bg-white">
+            <option value="characters">角色</option>
+            <option value="persons">人物</option>
+          </select>
         </div>
       </div>
     </div>
