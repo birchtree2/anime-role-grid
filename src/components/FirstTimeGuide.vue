@@ -120,7 +120,7 @@ const emit = defineEmits(['close'])
 
             <!-- Star Project -->
             <a 
-              href="https://github.com/ywh555hhh/anime-role-grid"
+              href="https://github.com/birchtree2/anime-role-grid"
               target="_blank"
               class="w-full py-2.5 bg-[#24292e] dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-sm"
             >

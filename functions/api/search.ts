@@ -17,7 +17,7 @@ export const onRequestPost = async (context: any) => {
                 'Content-Type': 'application/json',
                 'Authorization': authHeader || '',
                 // Use a fixed User-Agent for the proxy to ensure compliance
-                'User-Agent': 'AnimeGrid/1.0 (https://github.com/ywh555hhh/anime-role-grid)',
+                'User-Agent': 'AnimeGrid/1.0 (https://github.com/birchtree2/anime-role-grid)',
             },
             // Remove the helper field before forwarding
             body: JSON.stringify({

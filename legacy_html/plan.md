@@ -1,6 +1,6 @@
 好的，这是一个专门为 AI Agent 设计的、严格的、分步骤的项目改造方案。AI Agent 可以遵循这些指令来完成 `itorr/anime-grid` 项目的改造。
 
-项目名称： https://github.com/ywh555hhh/anime-role-grid
+项目名称： https://github.com/birchtree2/anime-role-grid
 
 Token: okv7MOpIwVdDcXOL14T9INiDD7GLwyJOlhf5uXBz
 
@@ -171,7 +171,7 @@ Token: okv7MOpIwVdDcXOL14T9INiDD7GLwyJOlhf5uXBz
            ref="input"
            v-model="keyword"
            class="w-full !pr-10"
-           placeholder="搜索角色..."
+           placeholder="搜索角色/人物... ..."
            type="text"
            @keydown.enter="handleSearch"
          >

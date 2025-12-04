@@ -101,7 +101,7 @@ const emit = defineEmits(['close'])
             <p class="text-xs text-gray-500">
               觉得好用的话，就分享给朋友们一起玩吧！
               <br>
-              <a href="https://github.com/ywh555hhh/anime-role-grid" target="_blank" class="text-[#e4007f] hover:underline">GitHub 贡献模板</a>
+              <a href="https://github.com/birchtree2/anime-role-grid" target="_blank" class="text-[#e4007f] hover:underline">GitHub 贡献模板</a>
             </p>
           </div>
 

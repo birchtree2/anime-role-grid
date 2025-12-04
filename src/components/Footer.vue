@@ -14,7 +14,7 @@ const showQQModal = ref(false)
     <!-- Social Links -->
     <div class="flex items-center justify-center gap-8 mb-8">
       <a 
-        href="https://github.com/ywh555hhh/anime-role-grid" 
+        href="https://github.com/birchtree2/anime-role-grid" 
         target="_blank" 
         class="flex items-center gap-2 hover:text-[#e4007f] transition-colors group"
       >
@@ -59,6 +59,11 @@ const showQQModal = ref(false)
         <span>致敬灵感</span>
         <a href="https://github.com/itorr/anime-grid" target="_blank" class="hover:text-[#e4007f] transition-colors border-b border-transparent hover:border-[#e4007f] flex items-center gap-1">
           itorr/anime-grid
+          <span class="i-carbon-launch text-[10px]" />
+        </a>
+        <span>fork来源</span>
+        <a href="https://github.com/ywh555hhh/anime-role-grid" target="_blank" class="hover:text-[#e4007f] transition-colors border-b border-transparent hover:border-[#e4007f] flex items-center gap-1">
+          ywh555hhh/anime-role-grid
           <span class="i-carbon-launch text-[10px]" />
         </a>
       </div>
