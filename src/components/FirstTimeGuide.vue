@@ -59,25 +59,77 @@ const emit = defineEmits(['close'])
           <div class="space-y-5 text-sm text-gray-700 dark:text-gray-300 font-medium">
 
             <!-- Community (Moved Up) -->
-            <div class="bg-pink-50 dark:bg-pink-900/20 border border-pink-200 dark:border-pink-700/50 p-3 rounded-lg">
-              <div class="flex gap-2 items-center mb-1 text-[#e4007f] font-bold">
+            <!-- Community Groups -->
+            <div class="bg-pink-50/50 dark:bg-pink-900/10 border border-pink-100 dark:border-pink-800/30 p-4 rounded-2xl">
+              <div class="flex gap-2 items-center mb-2 text-[#e4007f] font-bold">
                 <div class="i-carbon-group text-lg" />
                 <h3>加入组织</h3>
               </div>
-              <p class="text-xs text-gray-700 dark:text-gray-300 leading-relaxed mb-2">
-                这是一个主打 <b>青春 · 恋爱 · 校园</b> 的<br>
-                <b>ACN</b> (Animation · Comic · Novel) 交流群。<br>
-                现在组织创立初期，正是<b>入股好时期</b>！
+              
+              <p class="text-xs text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
+                这是一些<b>刚刚创立</b>的 QQ 组织，主打 <b>分享格子</b> 与 <b>寻找同好</b>。<br>
+                群内氛围和谐，现在正是 <b>入股</b> 的好时期！
               </p>
-              <a 
-                href="https://qm.qq.com/q/fzvxh7q4a6" 
-                target="_blank"
-                class="block w-full text-center py-2 bg-[#e4007f] text-white rounded-md font-bold text-xs hover:bg-[#c0006b] transition-colors flex flex-col items-center justify-center gap-0.5"
-              >
-                <span>点击直达</span>
-                <span class="text-[10px] opacity-90 font-normal">群号: 1022516640</span>
-              </a>
+
+              <div class="grid grid-cols-2 gap-3">
+                <!-- Q Group: ACN -->
+                <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=1LsjjxDEHjGWTDq3%2FRSfv4Qcb3ESkVgBC3mQmdOPhuFBeEfIbQnuHFGI%2BEA4QLIE&busi_data=eyJncm91cENvZGUiOiIxMDE4MjEzNjUzIiwidG9rZW4iOiJ1aUhXOHFjdlQwSGJlZjNCN0NWS0laRzI3MEY1MHhvczZiRW9EOU1xSGRxaTRJS21aSkRXWFhKTmMrWS9mM2JCIiwidWluIjoiMTkxNjY0NzYxNiJ9&data=ODTRpLsOGRek2N-cVzqTSr2rKDj1y3nmdtdgRnP_iZE7WKUGq9fr2LJHiSf9LLX4YNX78Rpq_mpvT8ROyfoC8g&svctype=4&tempid=h5_group_info" target="_blank" class="group-btn group">
+                  <div class="flex flex-col h-full justify-between relative z-10">
+                    <div class="flex items-center justify-between w-full">
+                      <div class="text-lg font-black tracking-wide leading-none">ACN 交流</div>
+                      <div class="i-carbon-arrow-up-right text-xl opacity-80 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </div>
+                    <div class="text-xs font-bold opacity-90 mt-1">青春·恋爱·校园</div>
+                  </div>
+                </a>
+
+                <!-- W Group: Mobile/Anime Games -->
+                <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=N%2Bfruq0iPx8IhUvbksaoNR2vPtCr7tTmrRRPfmGvuYlExWoy2LZsGfaL183PzNXO&busi_data=eyJncm91cENvZGUiOiI4NTkzNjEwOTkiLCJ0b2tlbiI6Ii9DQy9KZ0l4bzNObWFrOXJwbEV0Q3cxRmVNNmtOOGpDZFNLOCt1bHNxb05WL29zQVo1UlE4czVTWDM4dU8vZUsiLCJ1aW4iOiIxOTE2NjQ3NjE2In0%3D&data=caBB9HR43RsqoEKBASBC1plB48DZi3RsJLnQ7dgEYPj8fmVGnVqGWLn7YbYe_oZcAHod8KqRzsdl5hXVUQ9OaQ&svctype=4&tempid=h5_group_info" target="_blank" class="group-btn group">
+                  <div class="flex flex-col h-full justify-between relative z-10">
+                    <div class="flex items-center justify-between w-full">
+                      <div class="text-lg font-black tracking-wide leading-none">二游</div>
+                      <div class="i-carbon-arrow-up-right text-xl opacity-80 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </div>
+                    <div class="text-xs font-bold opacity-90 mt-1">手游·抽卡·剧情</div>
+                  </div>
+                </a>
+
+                <!-- E Group: Galgame -->
+                <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=KgGU8v2up7Umiwm97tlf6w9sQtNEHYrre4N%2BMKTxBsGS8b0mjwfgCm32QT3wafRj&busi_data=eyJncm91cENvZGUiOiIxNzYxODYwMTkiLCJ0b2tlbiI6InFTd2dSWmNyWXgvaHJvaHl3akd2bCtpdFRyOUd1QVdsM2t6MXNuczdpRjkyUHdyYzY4bngwbnVWV1MwYkI3WjYiLCJ1aW4iOiIzNjYzNTU4MDg3In0%3D&data=q2YUZm5dBCs7tzjCofgNzBxV77kTJNI5nHbeQ8b7zp8M3AeiUa2dqAyois_Pg4RFdwC-SJF4XpuYpAy9twSURg&svctype=4&tempid=h5_group_info" target="_blank" class="group-btn group">
+                  <div class="flex flex-col h-full justify-between relative z-10">
+                    <div class="flex items-center justify-between w-full">
+                      <div class="text-lg font-black tracking-wide leading-none">Galgame</div>
+                      <div class="i-carbon-arrow-up-right text-xl opacity-80 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </div>
+                    <div class="text-xs font-bold opacity-90 mt-1">美少女游戏</div>
+                  </div>
+                </a>
+
+                <!-- R Group: Water -->
+                <a href="https://qm.qq.com/q/kHNDRQUhj4" target="_blank" class="group-btn group">
+                  <div class="flex flex-col h-full justify-between relative z-10">
+                    <div class="flex items-center justify-between w-full">
+                      <div class="text-lg font-black tracking-wide leading-none">神人大水群</div>
+                      <div class="i-carbon-arrow-up-right text-xl opacity-80 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </div>
+                    <div class="text-xs font-bold opacity-90 mt-1">闲聊·吹水·日常</div>
+                  </div>
+                </a>
+              </div>
             </div>
+
+            <!-- Star Project -->
+            <a 
+              href="https://github.com/ywh555hhh/anime-role-grid"
+              target="_blank"
+              class="w-full py-2.5 bg-[#24292e] dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-sm"
+            >
+              <div class="i-carbon-logo-github text-lg" />
+              <div class="flex flex-col items-start leading-none">
+                <span class="font-bold text-xs">GitHub Star</span>
+                <span class="text-[10px] opacity-80 font-normal">支持开源项目</span>
+              </div>
+            </a>
             
             <!-- 1. Templates -->
             <div class="flex gap-3 items-start">
@@ -145,5 +197,20 @@ const emit = defineEmits(['close'])
 .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+}
+
+.group-btn {
+  @apply relative overflow-hidden rounded-xl p-4
+  bg-gradient-to-br from-[#e4007f] to-[#bd0068] text-white
+  shadow-md shadow-pink-500/20
+  transition-all duration-200 ease-out;
+}
+
+.group-btn:hover {
+  @apply transform scale-[1.02] shadow-lg shadow-pink-500/40 brightness-105;
+}
+
+.group-btn:active {
+  @apply transform scale-95 brightness-95;
 }
 </style>
